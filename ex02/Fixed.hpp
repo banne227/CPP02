@@ -33,6 +33,16 @@ class Fixed {
         Fixed operator-(const Fixed &fixed_nbr) const;
         Fixed operator*(const Fixed &fixed_nbr) const;
         Fixed operator/(const Fixed &fixed_nbr) const;
+        Fixed &operator++(void);          //prefixe
+        Fixed &operator--(void);          //prefixe
+        Fixed operator++(int);            //postfixe
+        Fixed operator--(int);            //postfixe
+
+        //min et max
+        static Fixed &min(Fixed &a, Fixed &b);
+        static Fixed &max(Fixed &a, Fixed &b);
+        static const Fixed &min(const Fixed &a, const Fixed &b);
+        static const Fixed &max(const Fixed &a, const Fixed &b);
 };
 
 std::ostream  &operator<<(std::ostream &str, Fixed const &fixed_nbr);

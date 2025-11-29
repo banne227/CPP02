@@ -19,27 +19,27 @@ static float power(float base, int exposant) //ici j'utiliserai la base 2
 }
 
 Fixed::Fixed() : _value(0) {
-    std::cout << "Default constructor called" << std::endl;
+    //std::cout << "Default constructor called" << std::endl;
 }
 
 Fixed::Fixed(const Fixed &copy){
-    std::cout << "Copy constructor called" << std::endl;
+    //std::cout << "Copy constructor called" << std::endl;
     *this = copy;
 }
 
 Fixed::Fixed(const int value){
     this->_value = (value * power(2,this->_frac)); //conversion en fixed-int *=2**8 (256)
-    std::cout << "Int constructor called" << std::endl;
+    //std::cout << "Int constructor called" << std::endl;
 }
 
 Fixed::Fixed(const float value){
     float to_imprement = (value * power(2,this->_frac));
     this->_value = roundf(to_imprement);
-    std::cout << "Float constructor called" << std::endl;
+    //std::cout << "Float constructor called" << std::endl;
 }
 
 Fixed::~Fixed() {
-    std::cout << "Destructor called" << std::endl;
+    //std::cout << "Destructor called" << std::endl;
 }
 
 int Fixed::getRawBits( void ) const {
@@ -60,7 +60,7 @@ int Fixed::toInt( void ) const{
 }
 
 Fixed &Fixed::operator=(const Fixed &copy) {
-    std::cout << "Copy assignment operator called" << std::endl;
+    //std::cout << "Copy assignment operator called" << std::endl;
     if (this != &copy) {
         this->_value = copy.getRawBits();
     }
@@ -112,7 +112,61 @@ Fixed Fixed::operator-(const Fixed &fixed_nbr) const{
 Fixed Fixed::operator*(const Fixed &fixed_nbr) const{
     Fixed result;
     long res = (long)this->getRawBits() * (long)fixed_nbr.getRawBits();
-    res = res >> this->_frac; //division par 256
+    res /= 256; //division par 256
     result.setRawBits((int)res);
     return(result);
+}
+
+Fixed Fixed::operator/(const Fixed &fixed_nbr) const{
+    Fixed result;
+    long res = (long)this->getRawBits() / (long)fixed_nbr.getRawBits(); 
+    res *= 256;  //multiplication par 256
+    result.setRawBits((int)res);
+    return(result);
+}
+
+Fixed &Fixed::operator++(void){ //prefixe
+    this->_value += 1;
+    return (*this);
+}
+
+Fixed &Fixed::operator--(void){ //prefixe
+    this->_value -= 1;
+    return (*this);
+}
+
+Fixed Fixed::operator++(int){ //postfixe
+    Fixed temp = *this;
+    this->_value += 1;
+    return (temp);
+}
+
+Fixed Fixed::operator--(int){ //postfixe
+    Fixed temp = *this;
+    this->_value -= 1;
+    return (temp);
+}
+
+Fixed &Fixed::min(Fixed &a, Fixed &b){
+    if (a.getRawBits() < b.getRawBits())
+        return (a);
+    return (b);
+}
+
+Fixed &Fixed::max(Fixed &a, Fixed &b){
+    if (a.getRawBits() > b.getRawBits())
+        return (a);
+    return (b);
+}
+
+const Fixed &Fixed::min(const Fixed &a, const Fixed &b){
+    if (a.getRawBits() < b.getRawBits())
+        return (a);
+    return (b);
+}
+
+const Fixed &Fixed::max(const Fixed &a, const Fixed &b){
+    if (a.getRawBits() > b.getRawBits())
+        return (a);
+    return (b);
 }
